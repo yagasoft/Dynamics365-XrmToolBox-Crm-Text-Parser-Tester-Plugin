@@ -1,28 +1,25 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces;
 using Yagasoft.CrmTextParserTesterPlugin.Helpers;
 using Yagasoft.CrmTextParserTesterPlugin.Model.Settings;
-using Yagasoft.CrmTextParserTesterPlugin.Model.ViewModels;
+using Yagasoft.Libraries.Common;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
 	public partial class TemplateEditor : UserControl
 	{
-		private readonly TemplateViewModel templateViewModel;
 		private readonly WorkerHelper workerHelper;
 
-		public TemplateEditor(TemplateViewModel templateViewModel, Form parentForm, WorkerHelper workerHelper)
+		private bool isOutputShown;
+		private UserControl currentControl;
+		private UserControl editor;
+
+		public TemplateEditor(WorkerHelper workerHelper)
 		{
-			this.templateViewModel = templateViewModel;
 			this.workerHelper = workerHelper;
-
 			InitializeComponent();
-
-			templateViewModel.CodeEditor = new EditorControl();
-			templateViewModel.CodeEditor.Dock = DockStyle.Fill;
-
-			templateViewModel.TextOutputControl = new OutputControl(this);
-			templateViewModel.TextOutputControl.Dock = DockStyle.Fill;
 		}
 
 		private void TemplateEditor_Load(object sender, EventArgs e)
@@ -30,29 +27,53 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			ShowEditor();
 		}
 
-		public void ShowEditor()
+		public async void ShowEditor(bool isOutput = false)
 		{
+			isOutputShown = isOutput;
+
+			var isHtml = isOutput ? checkBoxHtmlOutput.Checked : checkBoxHtmlEditor.Checked;
+
+			currentControl = isHtml
+				? (isOutput ? new BrowserOutputControl(this) : new BrowserEditorControl())
+				: (isOutput ? new OutputControl(this) : new EditorControl());
+
 			panelCodeEditor.Controls.Clear();
-			panelCodeEditor.Controls.Add(templateViewModel.CodeEditor);
-			templateViewModel.CodeEditor.Dock = DockStyle.Fill;
+			panelCodeEditor.Controls.Add(currentControl);
+
+			currentControl.Dock = DockStyle.Fill;
+
+			SetEditorText(await (isOutput ? Task.FromResult((currentControl as IEditor)?.GetText()) : GetEditorText()));
+
+			if (!isOutput)
+			{
+				editor = currentControl;
+			}
 		}
 
-		public string GetEditorText()
+		public async Task<string> GetEditorText()
 		{
-			return templateViewModel.CodeEditor.GetText();
+			return await ((editor as BrowserEditorControl)?.GetTextAsync() ?? Task.FromResult((editor as IEditor)?.GetText()));
 		}
 
 		public void SetEditorText(string text)
 		{
-			templateViewModel.CodeEditor.SetText(text);
+			(currentControl as IEditor)?.SetText(text);
 		}
 
-		public void ShowOutput(string text)
+		private void checkBoxHtmlEditor_CheckedChanged(object sender, EventArgs e)
 		{
-			templateViewModel.TextOutputControl.SetText(text);
-			panelCodeEditor.Controls.Clear();
-			panelCodeEditor.Controls.Add(templateViewModel.TextOutputControl);
-			templateViewModel.CodeEditor.Dock = DockStyle.Fill;
+			if (!isOutputShown)
+			{
+				ShowEditor();
+			}
+		}
+
+		private void checkBoxHtmlOutput_CheckedChanged(object sender, EventArgs e)
+		{
+			if (isOutputShown)
+			{
+				ShowEditor(true);
+			}
 		}
 	}
 }

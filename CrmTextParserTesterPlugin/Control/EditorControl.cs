@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces;
+using Yagasoft.Libraries.Common;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
-	public partial class EditorControl : UserControl
+	public partial class EditorControl : UserControl, IEditor
 	{
 		public EditorControl()
 		{
@@ -24,7 +18,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
 		public void SetText(string text)
 		{
-			richTextBox1.Text = text;
+			richTextBox1.Text = text.IsEmpty() ? "Start typing ..." : text;
 		}
 	}
 }

@@ -25,6 +25,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,6 +57,15 @@
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.0.26\lib\net462\Microsoft.Rest.ClientRuntime.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebView2.Core, Version=1.0.961.33, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.WebView2.1.0.961.33\lib\net45\Microsoft.Web.WebView2.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebView2.WinForms, Version=1.0.961.33, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.WebView2.1.0.961.33\lib\net45\Microsoft.Web.WebView2.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebView2.Wpf, Version=1.0.961.33, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.WebView2.1.0.961.33\lib\net45\Microsoft.Web.WebView2.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.XmlTransform, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.2\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
@@ -125,6 +136,7 @@
     <Reference Include="System.Data.Linq">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Design" />
     <Reference Include="System.DirectoryServices">
       <Private>False</Private>
     </Reference>
@@ -237,12 +249,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Control\BrowserOutputControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Control\BrowserOutputControl.Designer.cs">
+      <DependentUpon>BrowserOutputControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Control\DeletableMenuItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Control\DeletableMenuItem.Designer.cs">
       <DependentUpon>DeletableMenuItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Control\BrowserEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Control\BrowserEditorControl.Designer.cs">
+      <DependentUpon>BrowserEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Control\BaseEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Control\BaseEditorControl.Designer.cs">
+      <DependentUpon>BaseEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Control\Interfaces\IEditor.cs" />
     <Compile Include="Control\MenuPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -274,7 +305,6 @@
     <Compile Include="Helpers\WorkerHelper.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\Settings\PluginSettings.cs" />
-    <Compile Include="Model\ViewModels\TemplateViewModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -298,8 +328,17 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Control\BrowserOutputControl.resx">
+      <DependentUpon>BrowserOutputControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Control\DeletableMenuItem.resx">
       <DependentUpon>DeletableMenuItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Control\BrowserEditorControl.resx">
+      <DependentUpon>BrowserEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Control\BaseEditorControl.resx">
+      <DependentUpon>BaseEditorControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Control\MenuPanel.resx">
       <DependentUpon>MenuPanel.cs</DependentUpon>
@@ -322,6 +361,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\WebView2Loader.dll" />
+    <None Include="bin\Debug\runtimes\win-x64\native\WebView2Loader.dll" />
     <Content Include="nuget-access-key.txt" />
   </ItemGroup>
   <ItemGroup />
@@ -348,9 +389,11 @@ IF "$(ConfigurationName)" == "Release" (
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\ILMerge.3.0.41\build\ILMerge.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.3.0.41\build\ILMerge.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Web.WebView2.1.0.961.33\build\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.WebView2.1.0.961.33\build\Microsoft.Web.WebView2.targets'))" />
     <!--<Error Condition="!Exists('..\packages\MSBuild.ILMerge.Task.1.1.3\build\MSBuild.ILMerge.Task.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.ILMerge.Task.1.1.3\build\MSBuild.ILMerge.Task.props'))" />
     <Error Condition="!Exists('..\packages\MSBuild.ILMerge.Task.1.1.3\build\MSBuild.ILMerge.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.ILMerge.Task.1.1.3\build\MSBuild.ILMerge.Task.targets'))" />
     <Error Condition="!Exists('..\packages\ILMerge.3.0.41\build\ILMerge.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.3.0.41\build\ILMerge.props'))" />-->
   </Target>
+  <Import Project="..\packages\Microsoft.Web.WebView2.1.0.961.33\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.961.33\build\Microsoft.Web.WebView2.targets')" />
   <!--<Import Project="..\packages\MSBuild.ILMerge.Task.1.1.3\build\MSBuild.ILMerge.Task.targets" Condition="Exists('..\packages\MSBuild.ILMerge.Task.1.1.3\build\MSBuild.ILMerge.Task.targets')" />-->
 </Project>

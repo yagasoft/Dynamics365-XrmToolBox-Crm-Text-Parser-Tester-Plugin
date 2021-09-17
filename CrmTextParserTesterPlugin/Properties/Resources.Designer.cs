@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Yagasoft.TemplateCodeGeneratorPlugin.Properties {
+namespace Yagasoft.CrmTextParserTesterPlugin.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Yagasoft.TemplateCodeGeneratorPlugin.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Yagasoft.TemplateCodeGeneratorPlugin.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Yagasoft.CrmTextParserTesterPlugin.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,16 @@ namespace Yagasoft.TemplateCodeGeneratorPlugin.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] WebView2Loader {
+            get {
+                object obj = ResourceManager.GetObject("WebView2Loader", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

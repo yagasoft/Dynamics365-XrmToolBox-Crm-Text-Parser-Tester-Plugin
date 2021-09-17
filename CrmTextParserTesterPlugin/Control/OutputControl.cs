@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
-	public partial class OutputControl : UserControl
+	public partial class OutputControl : UserControl, IEditor
 	{
 		private readonly TemplateEditor templateEditor;
 
@@ -18,6 +19,11 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 		{
 			this.templateEditor = templateEditor;
 			InitializeComponent();
+		}
+
+		public string GetText()
+		{
+			return richTextBox1.Text;
 		}
 
 		public void SetText(string text)

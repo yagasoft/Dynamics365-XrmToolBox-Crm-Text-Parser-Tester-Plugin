@@ -20,7 +20,6 @@ using XrmToolBox.Extensibility.Interfaces;
 using Yagasoft.CrmTextParserTesterPlugin.Helpers;
 using Yagasoft.CrmTextParserTesterPlugin.Model;
 using Yagasoft.CrmTextParserTesterPlugin.Model.Settings;
-using Yagasoft.CrmTextParserTesterPlugin.Model.ViewModels;
 using Yagasoft.Libraries.Common;
 using Label = System.Windows.Forms.Label;
 using MessageBox = System.Windows.Forms.MessageBox;
@@ -50,10 +49,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 		private ToolStripSeparator toolStripSeparator5;
 
 		private Button buttonCancel;
-
-		private TableLayoutPanel tableLayoutMainPanel;
 		private TableLayoutPanel tableLayoutTopBar;
-		private Panel panelHost;
 
 		private ToolStripSeparator toolStripSeparator4;
 		private ToolStripButton buttonTemplateEditor;
@@ -65,12 +61,20 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 		private PluginSettings pluginSettings;
 
 		private TemplateEditor templateEditor;
-		private readonly TemplateViewModel templateViewModel;
 
 		private readonly WorkerHelper workerHelper;
 		private readonly UiHelper uiHelper;
 		private ToolStripSeparator toolStripSeparator1;
 		private ToolStripLabel labelQuickGuide;
+		private TableLayoutPanel tableLayoutPanelMain;
+		private Panel panelHost;
+		private TableLayoutPanel tableLayoutPanelTopBar;
+		private Panel panelRecordId;
+		private Label labelRecordId;
+		private TextBox textBoxRecordId;
+		private Panel panelEntityName;
+		private TextBox textBoxEntityName;
+		private Label labelEntityName;
 		private BackgroundWorker currentWorker;
 
 		#region Base tool implementation
@@ -84,7 +88,6 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			workerHelper = new WorkerHelper(
 				(s, work, callback) => InvokeSafe(() => RunAsync(s, work, callback)),
 				(s, work, callback) => InvokeSafe(() => RunAsync(s, work, callback)));
-			templateViewModel = new TemplateViewModel();
 			uiHelper = new UiHelper(panelToast, labelToast, InvokeSafe);
 		}
 
@@ -165,18 +168,28 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.buttonClearCache = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-			this.labelYagasoft = new System.Windows.Forms.ToolStripLabel();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.labelQuickGuide = new System.Windows.Forms.ToolStripLabel();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.labelYagasoft = new System.Windows.Forms.ToolStripLabel();
 			this.buttonCancel = new System.Windows.Forms.Button();
-			this.tableLayoutMainPanel = new System.Windows.Forms.TableLayoutPanel();
-			this.panelHost = new System.Windows.Forms.Panel();
 			this.tableLayoutTopBar = new System.Windows.Forms.TableLayoutPanel();
 			this.panelToast = new System.Windows.Forms.Panel();
 			this.labelToast = new System.Windows.Forms.Label();
+			this.tableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+			this.panelHost = new System.Windows.Forms.Panel();
+			this.tableLayoutPanelTopBar = new System.Windows.Forms.TableLayoutPanel();
+			this.labelEntityName = new System.Windows.Forms.Label();
+			this.textBoxEntityName = new System.Windows.Forms.TextBox();
+			this.panelRecordId = new System.Windows.Forms.Panel();
+			this.panelEntityName = new System.Windows.Forms.Panel();
+			this.textBoxRecordId = new System.Windows.Forms.TextBox();
+			this.labelRecordId = new System.Windows.Forms.Label();
 			this.toolBar.SuspendLayout();
-			this.tableLayoutMainPanel.SuspendLayout();
 			this.panelToast.SuspendLayout();
+			this.tableLayoutPanelMain.SuspendLayout();
+			this.tableLayoutPanelTopBar.SuspendLayout();
+			this.panelRecordId.SuspendLayout();
+			this.panelEntityName.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolBar
@@ -220,6 +233,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.buttonTemplateEditor.Name = "buttonTemplateEditor";
 			this.buttonTemplateEditor.Size = new System.Drawing.Size(58, 22);
 			this.buttonTemplateEditor.Text = "Editor";
+			this.buttonTemplateEditor.Visible = false;
 			this.buttonTemplateEditor.Click += new System.EventHandler(this.buttonTemplateEditor_Click);
 			// 
 			// buttonDefaultT4
@@ -245,6 +259,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
 			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			this.toolStripSeparator2.Visible = false;
 			// 
 			// buttonClearCache
 			// 
@@ -253,30 +268,13 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.buttonClearCache.Name = "buttonClearCache";
 			this.buttonClearCache.Size = new System.Drawing.Size(90, 22);
 			this.buttonClearCache.Text = "Clear Cache";
+			this.buttonClearCache.Visible = false;
 			this.buttonClearCache.Click += new System.EventHandler(this.buttonClearCache_Click);
 			// 
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
 			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-			// 
-			// labelYagasoft
-			// 
-			this.labelYagasoft.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
-			this.labelYagasoft.ForeColor = System.Drawing.Color.DarkViolet;
-			this.labelYagasoft.IsLink = true;
-			this.labelYagasoft.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-			this.labelYagasoft.LinkColor = System.Drawing.Color.DarkViolet;
-			this.labelYagasoft.Name = "labelYagasoft";
-			this.labelYagasoft.Size = new System.Drawing.Size(95, 22);
-			this.labelYagasoft.Text = "Yagasoft.com";
-			this.labelYagasoft.VisitedLinkColor = System.Drawing.Color.DarkBlue;
-			this.labelYagasoft.Click += new System.EventHandler(this.labelYagasoft_Click);
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
 			// 
 			// labelQuickGuide
 			// 
@@ -291,6 +289,24 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.labelQuickGuide.VisitedLinkColor = System.Drawing.Color.DarkBlue;
 			this.labelQuickGuide.Click += new System.EventHandler(this.labelQuickGuide_Click);
 			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+			// 
+			// labelYagasoft
+			// 
+			this.labelYagasoft.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
+			this.labelYagasoft.ForeColor = System.Drawing.Color.DarkViolet;
+			this.labelYagasoft.IsLink = true;
+			this.labelYagasoft.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+			this.labelYagasoft.LinkColor = System.Drawing.Color.DarkViolet;
+			this.labelYagasoft.Name = "labelYagasoft";
+			this.labelYagasoft.Size = new System.Drawing.Size(95, 22);
+			this.labelYagasoft.Text = "Yagasoft.com";
+			this.labelYagasoft.VisitedLinkColor = System.Drawing.Color.DarkBlue;
+			this.labelYagasoft.Click += new System.EventHandler(this.labelYagasoft_Click);
+			// 
 			// buttonCancel
 			// 
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -301,29 +317,6 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.buttonCancel.Text = "Cancel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-			// 
-			// tableLayoutMainPanel
-			// 
-			this.tableLayoutMainPanel.ColumnCount = 1;
-			this.tableLayoutMainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutMainPanel.Controls.Add(this.panelHost, 0, 0);
-			this.tableLayoutMainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutMainPanel.Location = new System.Drawing.Point(0, 25);
-			this.tableLayoutMainPanel.Name = "tableLayoutMainPanel";
-			this.tableLayoutMainPanel.RowCount = 1;
-			this.tableLayoutMainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-			this.tableLayoutMainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutMainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutMainPanel.Size = new System.Drawing.Size(1000, 416);
-			this.tableLayoutMainPanel.TabIndex = 22;
-			// 
-			// panelHost
-			// 
-			this.panelHost.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelHost.Location = new System.Drawing.Point(3, 3);
-			this.panelHost.Name = "panelHost";
-			this.panelHost.Size = new System.Drawing.Size(994, 410);
-			this.panelHost.TabIndex = 1;
 			// 
 			// tableLayoutTopBar
 			// 
@@ -366,10 +359,105 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.labelToast.Text = "<toast>";
 			this.labelToast.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
+			// tableLayoutPanelMain
+			// 
+			this.tableLayoutPanelMain.ColumnCount = 1;
+			this.tableLayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelMain.Controls.Add(this.panelHost, 0, 1);
+			this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanelTopBar, 0, 0);
+			this.tableLayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelMain.Location = new System.Drawing.Point(0, 25);
+			this.tableLayoutPanelMain.Name = "tableLayoutPanelMain";
+			this.tableLayoutPanelMain.RowCount = 2;
+			this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
+			this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelMain.Size = new System.Drawing.Size(1000, 416);
+			this.tableLayoutPanelMain.TabIndex = 0;
+			// 
+			// panelHost
+			// 
+			this.panelHost.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelHost.Location = new System.Drawing.Point(3, 40);
+			this.panelHost.Name = "panelHost";
+			this.panelHost.Size = new System.Drawing.Size(994, 373);
+			this.panelHost.TabIndex = 0;
+			// 
+			// tableLayoutPanelTopBar
+			// 
+			this.tableLayoutPanelTopBar.ColumnCount = 2;
+			this.tableLayoutPanelTopBar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelTopBar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelTopBar.Controls.Add(this.panelRecordId, 1, 0);
+			this.tableLayoutPanelTopBar.Controls.Add(this.panelEntityName, 0, 0);
+			this.tableLayoutPanelTopBar.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelTopBar.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanelTopBar.Name = "tableLayoutPanelTopBar";
+			this.tableLayoutPanelTopBar.RowCount = 1;
+			this.tableLayoutPanelTopBar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelTopBar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelTopBar.Size = new System.Drawing.Size(994, 31);
+			this.tableLayoutPanelTopBar.TabIndex = 1;
+			// 
+			// labelEntityName
+			// 
+			this.labelEntityName.AutoSize = true;
+			this.labelEntityName.Location = new System.Drawing.Point(3, 5);
+			this.labelEntityName.Name = "labelEntityName";
+			this.labelEntityName.Size = new System.Drawing.Size(64, 13);
+			this.labelEntityName.TabIndex = 0;
+			this.labelEntityName.Text = "Entity Name";
+			// 
+			// textBoxEntityName
+			// 
+			this.textBoxEntityName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxEntityName.Location = new System.Drawing.Point(73, 2);
+			this.textBoxEntityName.Name = "textBoxEntityName";
+			this.textBoxEntityName.Size = new System.Drawing.Size(415, 20);
+			this.textBoxEntityName.TabIndex = 1;
+			// 
+			// panelRecordId
+			// 
+			this.panelRecordId.Controls.Add(this.labelRecordId);
+			this.panelRecordId.Controls.Add(this.textBoxRecordId);
+			this.panelRecordId.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelRecordId.Location = new System.Drawing.Point(500, 3);
+			this.panelRecordId.Name = "panelRecordId";
+			this.panelRecordId.Size = new System.Drawing.Size(491, 25);
+			this.panelRecordId.TabIndex = 1;
+			// 
+			// panelEntityName
+			// 
+			this.panelEntityName.Controls.Add(this.textBoxEntityName);
+			this.panelEntityName.Controls.Add(this.labelEntityName);
+			this.panelEntityName.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelEntityName.Location = new System.Drawing.Point(3, 3);
+			this.panelEntityName.Name = "panelEntityName";
+			this.panelEntityName.Size = new System.Drawing.Size(491, 25);
+			this.panelEntityName.TabIndex = 2;
+			// 
+			// textBoxRecordId
+			// 
+			this.textBoxRecordId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxRecordId.Location = new System.Drawing.Point(66, 2);
+			this.textBoxRecordId.Name = "textBoxRecordId";
+			this.textBoxRecordId.Size = new System.Drawing.Size(422, 20);
+			this.textBoxRecordId.TabIndex = 0;
+			// 
+			// labelRecordId
+			// 
+			this.labelRecordId.AutoSize = true;
+			this.labelRecordId.Location = new System.Drawing.Point(3, 5);
+			this.labelRecordId.Name = "labelRecordId";
+			this.labelRecordId.Size = new System.Drawing.Size(56, 13);
+			this.labelRecordId.TabIndex = 1;
+			this.labelRecordId.Text = "Record ID";
+			// 
 			// PluginControl
 			// 
+			this.Controls.Add(this.tableLayoutPanelMain);
 			this.Controls.Add(this.panelToast);
-			this.Controls.Add(this.tableLayoutMainPanel);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.toolBar);
 			this.Name = "PluginControl";
@@ -377,8 +465,13 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.Load += new System.EventHandler(this.PluginControl_Load);
 			this.toolBar.ResumeLayout(false);
 			this.toolBar.PerformLayout();
-			this.tableLayoutMainPanel.ResumeLayout(false);
 			this.panelToast.ResumeLayout(false);
+			this.tableLayoutPanelMain.ResumeLayout(false);
+			this.tableLayoutPanelTopBar.ResumeLayout(false);
+			this.panelRecordId.ResumeLayout(false);
+			this.panelRecordId.PerformLayout();
+			this.panelEntityName.ResumeLayout(false);
+			this.panelEntityName.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -394,7 +487,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 		{
 			buttonCancel.Hide();
 
-			templateEditor = new TemplateEditor(templateViewModel, ParentForm, workerHelper);
+			templateEditor = new TemplateEditor(workerHelper);
 			ShowTemplateEditor();
 		}
 
@@ -437,8 +530,8 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
 		private void buttonDefaultT4_Click(object sender, EventArgs e)
 		{
-			var result = MessageBox.Show($"Resetting the template will overwrite the one in the editor. Are you sure you want to proceed?",
-				$"Template Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+			var result = MessageBox.Show($"Resetting the text will overwrite the one in the editor. Are you sure you want to proceed?",
+				$"Text Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
 			if (result == DialogResult.Yes)
 			{
@@ -504,11 +597,28 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 				});
 		}
 
-		private void GenerateCode()
+		private async void GenerateCode()
 		{
+			var entityName = textBoxEntityName.Text;
+			var isRecordId = Guid.TryParse(textBoxRecordId.Text, out var recordId);
+
+			if (entityName.IsEmpty())
+			{
+				MessageBox.Show("Entity Name is required to be able to generate an output.", "Missing Value", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
+				return;
+			}
+
+			if (!isRecordId)
+			{
+				MessageBox.Show("Record ID is required to be able to generate an output.", "Missing Value", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
+				return;
+			}
+
 			uiHelper.ShowToast("Generating text output ...");
 
-			var template = templateEditor.GetEditorText();
+			var template = await templateEditor.GetEditorText();
 
 			DisableTool();
 
@@ -541,7 +651,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 											{
 												output = CrmParser
 													.Parse(template,
-														new Entity("ys_test", Guid.Parse("{4E8D9F14-37F9-EB11-9AC9-000D3A4C87C6}")),
+														new Entity(entityName, recordId),
 														Service,
 														Guid.NewGuid());
 											}
@@ -630,7 +740,8 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
 							if (e.Result != null)
 							{
-								templateEditor.ShowOutput((string)e.Result);
+								templateEditor.ShowEditor(true);
+								templateEditor.SetEditorText((string)e.Result);
 							}
 						},
 					AsyncArgument = null,
@@ -645,7 +756,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			InvokeSafe(
 				() =>
 				{
-					tableLayoutMainPanel.Enabled = true;
+					tableLayoutPanelMain.Enabled = true;
 					toolBar.Enabled = true;
 				});
 		}
@@ -656,7 +767,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 				() =>
 				{
 					toolBar.Enabled = false;
-					tableLayoutMainPanel.Enabled = false;
+					tableLayoutPanelMain.Enabled = false;
 				});
 		}
 
