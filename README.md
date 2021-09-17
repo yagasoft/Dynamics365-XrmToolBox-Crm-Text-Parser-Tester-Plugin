@@ -1,6 +1,6 @@
 # Dynamics365-XrmToolBox-CrmTextParser-Tester-Plugin
 
-### Version: 1.1.1.1
+### Version: 1.1.1.2
 ---
 
 An XrmToolBox plugin that can be used to test the CRM text parser. The parser itself resolves many challenges that come up in the context of Dynamics 365 dynamic text.
@@ -11,7 +11,7 @@ Refer to the parser's page: [CRM Text Parser](https://github.com/yagasoft/Dynami
 
 ## Usage
 
-Install ([here](https://www.xrmtoolbox.com/plugins/plugininfo/?id=45abdb43-f0e5-ea11-bf21-281878877ebf)).
+Install ([here](https://www.xrmtoolbox.com/plugins/D365-CrmTextParser-Tester-Plugin)).
 
 + Fill the text to parse
 + Click 'Parse' on the toolbar
@@ -20,7 +20,7 @@ You can read a quick overview of the tool and its functionality [here](https://b
 
 ## Changes
 
-#### _v1.1.1.1 (2021-09-17)_
+#### _v1.1.1.2 (2021-09-18)_
 + Initial release
 
 ---

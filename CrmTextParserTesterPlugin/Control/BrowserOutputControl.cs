@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,7 +17,7 @@ using Yagasoft.Libraries.Common;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
-	public partial class BrowserOutputControl : UserControl, IEditor
+	public partial class BrowserOutputControl : UserControl, IEditor, IEditorAync
 	{
 		private readonly TemplateEditor templateEditor;
 
@@ -29,6 +30,18 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 		public string GetText()
 		{
 			return webView21.Text;
+		}
+
+		public async Task<string> GetTextAsync()
+		{
+			try
+			{
+				return Regex.Unescape(await webView21.CoreWebView2.ExecuteScriptAsync("document.getElementsByTagName('html')[0].innerHTML")).Trim('"');
+			}
+			catch
+			{
+				return string.Empty;
+			}
 		}
 
 		public async void SetText(string content)

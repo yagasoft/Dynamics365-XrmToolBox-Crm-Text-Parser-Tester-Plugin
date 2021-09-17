@@ -273,6 +273,7 @@
     <Compile Include="Control\BaseEditorControl.Designer.cs">
       <DependentUpon>BaseEditorControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Control\Interfaces\IEditorAync.cs" />
     <Compile Include="Control\Interfaces\IEditor.cs" />
     <Compile Include="Control\MenuPanel.cs">
       <SubType>UserControl</SubType>

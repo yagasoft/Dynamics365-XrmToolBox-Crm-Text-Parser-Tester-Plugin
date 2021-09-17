@@ -14,7 +14,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
 		private bool isOutputShown;
 		private UserControl currentControl;
-		private UserControl editor;
+		private UserControl editorControl;
 
 		public TemplateEditor(WorkerHelper workerHelper)
 		{
@@ -33,6 +33,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
 			var isHtml = isOutput ? checkBoxHtmlOutput.Checked : checkBoxHtmlEditor.Checked;
 
+			var outputControl = editorControl == currentControl ? null : currentControl;
 			currentControl = isHtml
 				? (isOutput ? new BrowserOutputControl(this) : new BrowserEditorControl())
 				: (isOutput ? new OutputControl(this) : new EditorControl());
@@ -42,17 +43,18 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
 			currentControl.Dock = DockStyle.Fill;
 
-			SetEditorText(await (isOutput ? Task.FromResult((currentControl as IEditor)?.GetText()) : GetEditorText()));
+			SetEditorText(await (isOutput ? GetEditorText(outputControl) : GetEditorText()));
 
 			if (!isOutput)
 			{
-				editor = currentControl;
+				editorControl = currentControl;
 			}
 		}
 
-		public async Task<string> GetEditorText()
+		public async Task<string> GetEditorText(UserControl control = null)
 		{
-			return await ((editor as BrowserEditorControl)?.GetTextAsync() ?? Task.FromResult((editor as IEditor)?.GetText()));
+			return await (((control ?? editorControl) as IEditorAync)?.GetTextAsync()
+				?? Task.FromResult(((control ?? editorControl) as IEditor)?.GetText()));
 		}
 
 		public void SetEditorText(string text)

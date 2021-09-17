@@ -20,7 +20,7 @@ using Yagasoft.Libraries.Common;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
-	public partial class BrowserEditorControl : UserControl, IEditor
+	public partial class BrowserEditorControl : UserControl, IEditor, IEditorAync
 	{
 		public BrowserEditorControl()
 		{

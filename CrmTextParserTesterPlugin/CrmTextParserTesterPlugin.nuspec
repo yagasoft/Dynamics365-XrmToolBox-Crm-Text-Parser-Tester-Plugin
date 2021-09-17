@@ -3,8 +3,8 @@
 <package>
   <metadata>
     <id>D365-CrmTextParser-Tester-Plugin</id>
-    <title>Dynamics 365 CRM Text Parser Tester Plugin</title>
-    <version>1.1.1.1</version>
+    <title>Dynamics 365 CRM Text Parser Tester</title>
+    <version>1.1.1.2</version>
     <authors>Ahmed Elsawalhy</authors>
     <owners>Ahmed Elsawalhy</owners>
     <projectUrl>https://github.com/yagasoft/Dynamics365-XrmToolBox-CrmTextParser-Tester-Plugin</projectUrl>
@@ -20,7 +20,7 @@
     <copyright>Copyright 2021 Ahmed Elsawalhy</copyright>
     <tags>XrmToolBox plugin,tool,CRM,Dynamics,365,yagasoft,xrm,early,bound,code,generate,generator,t4,template</tags>
     <releaseNotes>
-      * 1.1.1.1
+      * 1.1.1.2
       Initial release
     </releaseNotes>
     <dependencies>
