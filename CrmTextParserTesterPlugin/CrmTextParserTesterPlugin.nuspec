@@ -1,0 +1,79 @@
+﻿<?xml version="1.0"?>
+
+<package>
+  <metadata>
+    <id>D365-CrmTextParser-Tester-Plugin</id>
+    <title>Dynamics 365 CRM Text Parser Tester Plugin</title>
+    <version>2.3.1.1</version>
+    <authors>Ahmed Elsawalhy</authors>
+    <owners>Ahmed Elsawalhy</owners>
+    <projectUrl>https://github.com/yagasoft/Dynamics365-XrmToolBox-CrmTextParser-Tester-Plugin</projectUrl>
+    <iconUrl>https://blog.yagasoft.com/wp-content/uploads/generator-logo.png</iconUrl>
+    <licenseUrl>https://raw.githubusercontent.com/yagasoft/Dynamics365-XrmToolBox-CrmTextParser-Tester-Plugin/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>CRM Text Parser Tester</summary>
+    <description>
+      An XrmToolBox plugin that can be used to generate Early-bound code from a CRM Schema using a customisable T4 Template.
+
+      Features:
+      + Preserved the original CrmSvcUtil structure and logic.
+      + Customize the way the code is generated.
+      -- You get a default T4 template for the code that is generated, with a multitude more features than the official tool (features below).
+      -- You can rewrite the whole template if you wish for any possible requirements.
+      + Replaced the SDK types with .NET types.
+      + Generate only what's needed
+      -- Only choose the entities required.
+      -- Only the fields required.
+      + Additional control
+      -- Option to use display names of entities and fields as variable names instead of logical names.
+      -- Override field names inside the tool's UI.
+      -- Ability to Lock variable names to avoid code errors on regeneration.
+      + Support for strongly-typed alternate keys, for entities and Entity References.
+      + Add annotations for model validation.
+      + Generate metadata.
+      -- Field logical and schema names.
+      -- Localised labels.
+      + Automatically limit attributes retrieved from CRM on any entity in a LINQ to the ones choosen (filtered) in the tool (check new entity constructors).
+      + Many options to optimise generated code size even further.
+      + Generate concrete classes for CRM Actions.
+      + Support bulk relation loading.
+      -- Support filtering on relation loading.
+    </description>
+    <copyright>Copyright 2021 Ahmed Elsawalhy</copyright>
+    <tags>XrmToolBox plugin,tool,CRM,Dynamics,365,yagasoft,xrm,early,bound,code,generate,generator,t4,template</tags>
+    <releaseNotes>
+      * 2.3.1.1
+      Improved: filtering feature now works over logical and display names, and renames
+      Updated: latest custom libraries
+      Fixed: template issues
+      * 2.2.2.1
+      Fixed: mishandling errors
+      * 2.2.1.1
+      Added: Filter Details window row filtering
+      Fixed: generated code 'labels' syntax error
+      * 2.1.0.1
+      Added: recent settings list (load history)
+      Added: reset option for the template text
+      Added: toast notification for clearer status
+      Improved: load and save logic
+      Fixed: fixed cancel button
+      Fixed: issues
+      * 2.0.0.1
+      Added: all missing features from VS extension (click on 'Quick Guide' for more info), except Contracts
+      Added: keep track of paths (settings, template, and code) used in previous sessions and the links between them
+      Fixed: layout issues
+      * 1.0.0.5
+      Fixed: assembly issues
+      * 1.0.0.3
+      Changed: updated package name
+      * 1.0.0.1
+      Initial release
+    </releaseNotes>
+    <dependencies>
+      <dependency id="XrmToolBox" version="1.2020.2.36" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\XrmToolBox\Plugins\Yagasoft.TemplateCodeGeneratorPlugin.dll" target="lib\net462\Plugins" />
+  </files>
+</package>
