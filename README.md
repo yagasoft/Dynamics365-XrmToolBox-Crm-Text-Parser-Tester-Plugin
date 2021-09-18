@@ -1,5 +1,7 @@
 # Dynamics365-XrmToolBox-CrmTextParser-Tester-Plugin
 
+[![Join the chat at https://gitter.im/yagasoft/Dynamics365-XrmToolBox-CrmTextParser-Tester-Plugin](https://badges.gitter.im/yagasoft/Dynamics365-XrmToolBox-CrmTextParser-Tester-Plugin.svg)](https://gitter.im/yagasoft/Dynamics365-XrmToolBox-CrmTextParser-Tester-Plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ### Version: 1.1.1.2
 ---
 
