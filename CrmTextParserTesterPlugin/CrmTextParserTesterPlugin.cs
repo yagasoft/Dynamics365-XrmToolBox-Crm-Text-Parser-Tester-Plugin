@@ -22,7 +22,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin
 	[ExportMetadata("Name", "Dynamics 365 Text Parser Tester")]
 	[ExportMetadata("Description", "A tester for the CRM text parser."
 		+ " The parser itself resolves many challenges that come up in the context of Dynamics 365 dynamic text.")]
-	public class TemplateCodeGeneratorPlugin : PluginBase
+	public class CrmTextParserTesterPlugin : PluginBase
 	{
 		public override IXrmToolBoxPluginControl GetControl()
 		{

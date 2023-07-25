@@ -9,6 +9,6 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces
     public interface IEditor
     {
 	    string GetText();
-	    void SetText(string text);
+	    Task SetText(string text);
     }
 }

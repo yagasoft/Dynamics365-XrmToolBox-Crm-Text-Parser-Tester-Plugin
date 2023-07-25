@@ -1,10 +1,12 @@
-﻿using System;
+﻿#region Imports
+
+using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces;
 using Yagasoft.CrmTextParserTesterPlugin.Helpers;
-using Yagasoft.CrmTextParserTesterPlugin.Model.Settings;
-using Yagasoft.Libraries.Common;
+
+#endregion
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
@@ -13,8 +15,17 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 		private readonly WorkerHelper workerHelper;
 
 		private bool isOutputShown;
+
 		private UserControl currentControl;
+		private UserControl browserEditorControl;
+		private UserControl textEditorControl;
 		private UserControl editorControl;
+		private UserControl browserOutputControl;
+		private UserControl textOutputControl;
+		private UserControl outputControl;
+
+		private string editorText;
+		private string outputText;
 
 		public TemplateEditor(WorkerHelper workerHelper)
 		{
@@ -22,59 +33,94 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			InitializeComponent();
 		}
 
-		private void TemplateEditor_Load(object sender, EventArgs e)
+		private async void TemplateEditor_Load(object sender, EventArgs e)
 		{
-			ShowEditor();
+			await ShowEditor();
 		}
 
-		public async void ShowEditor(bool isOutput = false)
+		public async Task ShowEditor(bool isOutput = false)
 		{
 			isOutputShown = isOutput;
 
-			var isHtml = isOutput ? checkBoxHtmlOutput.Checked : checkBoxHtmlEditor.Checked;
+			editorText = currentControl == editorControl ? await GetEditorText(currentControl) : editorText;
+			outputText = currentControl == outputControl ? await GetEditorText(currentControl) : outputText;
 
-			var outputControl = editorControl == currentControl ? null : currentControl;
-			currentControl = isHtml
-				? (isOutput ? new BrowserOutputControl(this) : new BrowserEditorControl())
-				: (isOutput ? new OutputControl(this) : new EditorControl());
+			editorControl = checkBoxHtmlEditor.Checked
+				? browserEditorControl ??= new BrowserEditorControl()
+				: textEditorControl ??= new EditorControl();
+
+			outputControl = checkBoxHtmlOutput.Checked
+				? browserOutputControl ??= new BrowserOutputControl(this)
+				: textOutputControl ??= new OutputControl(this);
+
+			currentControl = isOutput ? outputControl : editorControl;
 
 			panelCodeEditor.Controls.Clear();
 			panelCodeEditor.Controls.Add(currentControl);
 
 			currentControl.Dock = DockStyle.Fill;
 
-			SetEditorText(await (isOutput ? GetEditorText(outputControl) : GetEditorText()));
-
-			if (!isOutput)
-			{
-				editorControl = currentControl;
-			}
+			await SetEditorText(currentControl == editorControl ? editorText : outputText, isOutput);
 		}
 
 		public async Task<string> GetEditorText(UserControl control = null)
 		{
-			return await (((control ?? editorControl) as IEditorAync)?.GetTextAsync()
+			control ??= editorControl;
+
+			if (control != currentControl)
+			{
+				return currentControl == editorControl ? editorText : outputText;
+			}
+
+			return await ((control as IEditorAync)?.GetTextAsync()
 				?? Task.FromResult(((control ?? editorControl) as IEditor)?.GetText()));
 		}
 
-		public void SetEditorText(string text)
+		public async Task SetEditorText(string text, bool isOutput = false)
 		{
-			(currentControl as IEditor)?.SetText(text);
+			var control = (isOutput ? outputControl : editorControl) as IEditor;
+
+			if (control == null)
+			{
+				return;
+			}
+
+			await control.SetText(text);
 		}
 
-		private void checkBoxHtmlEditor_CheckedChanged(object sender, EventArgs e)
+		private async void checkBoxHtmlEditor_CheckedChanged(object sender, EventArgs e)
 		{
 			if (!isOutputShown)
 			{
-				ShowEditor();
+				checkBoxHtmlEditor.Enabled = false;
+
+				try
+				{
+					await ShowEditor();
+					await Task.Delay(300);
+				}
+				finally
+				{
+					checkBoxHtmlEditor.Enabled = true;
+				}
 			}
 		}
 
-		private void checkBoxHtmlOutput_CheckedChanged(object sender, EventArgs e)
+		private async void checkBoxHtmlOutput_CheckedChanged(object sender, EventArgs e)
 		{
 			if (isOutputShown)
 			{
-				ShowEditor(true);
+				checkBoxHtmlOutput.Enabled = false;
+
+				try
+				{
+					await ShowEditor(true);
+					await Task.Delay(300);
+				}
+				finally
+				{
+					checkBoxHtmlOutput.Enabled = true;
+				}
 			}
 		}
 	}

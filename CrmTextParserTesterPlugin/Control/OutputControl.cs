@@ -26,14 +26,14 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			return richTextBox1.Text;
 		}
 
-		public void SetText(string text)
+		public async Task SetText(string text)
 		{
 			richTextBox1.Text = text;
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private async void button1_Click(object sender, EventArgs e)
 		{
-			templateEditor.ShowEditor();
+			await templateEditor.ShowEditor();
 		}
 	}
 }

@@ -44,31 +44,15 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			}
 		}
 
-		public async void SetText(string content)
+		public async Task SetText(string content)
 		{
-			var filePath = Path.GetDirectoryName(new Uri(typeof(CoreWebView2Environment).Assembly.CodeBase).LocalPath) ?? ".";
-			filePath = Path.Combine(filePath, "runtimes/win-x64/native/WebView2Loader.dll");
-
-			if (!File.Exists(filePath))
-			{
-				var folder = Path.GetDirectoryName(filePath);
-
-				if (!string.IsNullOrWhiteSpace(folder))
-				{
-					Directory.CreateDirectory(folder);
-				}
-
-				File.WriteAllBytes(filePath, Properties.Resources.WebView2Loader);
-			}
-
 			await webView21.EnsureCoreWebView2Async();
-
-			webView21.NavigateToString(content);
+			webView21.NavigateToString(content ?? string.Empty);
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private async void button1_Click(object sender, EventArgs e)
 		{
-			templateEditor.ShowEditor();
+			await templateEditor.ShowEditor();
 		}
 	}
 }
