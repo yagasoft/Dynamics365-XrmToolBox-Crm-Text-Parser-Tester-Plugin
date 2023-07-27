@@ -29,7 +29,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -138,7 +138,9 @@
       <HintPath>..\packages\NuGet.Versioning.5.9.3\lib\net45\NuGet.Versioning.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationCore">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PresentationFramework">
       <Private>False</Private>
     </Reference>
@@ -168,22 +170,30 @@
     <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Data.Linq">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Design" />
+    <Reference Include="System.Design">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.DirectoryServices">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.DirectoryServices.AccountManagement">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Drawing">
       <Private>False</Private>
     </Reference>
     <Reference Include="System.IdentityModel">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
       <Private>False</Private>
@@ -198,7 +208,9 @@
     <Reference Include="System.Net.Http.WebRequest">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
       <Private>False</Private>
@@ -221,6 +233,7 @@
     </Reference>
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Security.Cryptography.Cng, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Cng.5.0.0\lib\net462\System.Security.Cryptography.Cng.dll</HintPath>
@@ -282,7 +295,9 @@
     <Reference Include="System.Workflow.Runtime">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xaml">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <Private>False</Private>
     </Reference>
@@ -295,7 +310,9 @@
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationProvider">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <HintPath>..\packages\DockPanelSuite.3.0.6\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
       <Private>False</Private>
@@ -304,8 +321,12 @@
       <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.0.6\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WindowsBase">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsFormsIntegration">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="XrmToolBox, Version=1.2022.10.58, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\XrmToolBoxPackage.1.2022.10.58\lib\net462\XrmToolBox.exe</HintPath>
       <Private>False</Private>
@@ -428,17 +449,27 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST "$(SolutionDir)XrmToolBox\Plugins" mkdir "$(SolutionDir)XrmToolBox\Plugins"
+    <PostBuildEvent>IF NOT EXIST "$(TargetDir)merge" mkdir "$(TargetDir)merge"
+
+copy /Y "$(TargetPath)" "$(SolutionDir)lib\ILMerge\"
+copy /Y "$(TargetPath)" "$(TargetDir)merge\"
+copy /Y "$(SolutionDir)packages\Yagasoft.Libraries.Common.5.1.3\lib\net462" "$(SolutionDir)lib\ILMerge\"
+copy /Y "$(SolutionDir)packages\Yagasoft.Libraries.Common.5.1.3\lib\net462" "$(TargetDir)merge\"
+
+IF NOT EXIST "$(SolutionDir)XrmToolBox\Plugins" mkdir "$(SolutionDir)XrmToolBox\Plugins"
+
 
 IF "$(ConfigurationName)" == "Debug" (
-  $(SolutionDir)packages\ILMerge.3.0.41\tools\net452\ILMerge.exe /out:"$(SolutionDir)XrmToolBox\Plugins\$(TargetFileName)" "$(TargetDir)*.dll" /target:library /wildcards /lib:"$(SolutionDir)lib\ILMerge" /targetplatform:v4,"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2" /attr:"$(TargetPath)"
+  $(SolutionDir)packages\ILMerge.3.0.41\tools\net452\ILMerge.exe /out:"$(TargetPath)" "$(TargetDir)merge\*.dll" /target:library /wildcards /lib:"$(SolutionDir)lib\ILMerge" /targetplatform:v4,"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2" /attr:"$(TargetPath)"
 )
 
 IF "$(ConfigurationName)" == "Release" (
+  $(SolutionDir)packages\ILMerge.3.0.41\tools\net452\ILMerge.exe /out:"$(TargetPath)" "$(TargetDir)merge\*.dll" /target:library /wildcards /ndebug /lib:"$(SolutionDir)lib\ILMerge" /targetplatform:v4,"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2" /attr:"$(TargetPath)"
   $(SolutionDir)lib/nuget.exe pack $(ProjectDir)\CrmTextParserTesterPlugin.nuspec
   copy /Y "$(TargetDir)*.nupkg" "C:\Nuget.Local\"
 )
-</PostBuildEvent>
+
+copy /Y "$(TargetPath)" "$(SolutionDir)XrmToolBox\Plugins\"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>del "$(TargetDir)*.nupkg"</PreBuildEvent>
