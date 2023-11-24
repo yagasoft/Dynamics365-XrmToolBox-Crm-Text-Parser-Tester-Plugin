@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces
 {
-    public interface IEditorAync
+    public interface IEditorAsync
     {
 	    Task<string> GetTextAsync();
     }

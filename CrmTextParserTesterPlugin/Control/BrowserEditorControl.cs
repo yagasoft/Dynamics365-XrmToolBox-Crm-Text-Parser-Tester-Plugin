@@ -16,7 +16,7 @@ using Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
-	public partial class BrowserEditorControl : UserControl, IEditor, IEditorAync
+	public partial class BrowserEditorControl : UserControl, IEditor, IEditorAsync, IContentChanged<EventHandler<CoreWebView2WebMessageReceivedEventArgs>>
 	{
 		public bool IsInitialised { get; set; }
 
@@ -110,6 +110,12 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
       var getEditorData = () => editor?.getData();
       var setEditorData = (data) => editor?.setData(data);
+
+      editor.on('change',
+          function()
+          {
+              window.chrome.webview.postMessage(getEditorData);
+          });
     </script>
   </body>
 </html>";
@@ -135,6 +141,13 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 							&& currentText.Contains("<body></body>"));
 			}
 			while (isRetry);
+		}
+
+		public async Task RegisterContentChange(EventHandler<CoreWebView2WebMessageReceivedEventArgs> handler)
+		{
+			await webView21.EnsureCoreWebView2Async();
+			webView21.CoreWebView2.WebMessageReceived -= handler;
+			webView21.CoreWebView2.WebMessageReceived += handler;
 		}
 
 		private static string ToLiteral(string input)

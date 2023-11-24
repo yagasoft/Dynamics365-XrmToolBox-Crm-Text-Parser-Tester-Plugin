@@ -1,10 +1,19 @@
 ﻿#region Imports
 
 using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Web.WebView2.Core;
+using NuGet.Packaging.Signing;
+
 using Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces;
 using Yagasoft.CrmTextParserTesterPlugin.Helpers;
+using Yagasoft.Libraries.Common;
+using EventHandler = System.EventHandler;
 
 #endregion
 
@@ -60,6 +69,67 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
 			currentControl.Dock = DockStyle.Fill;
 
+			var latestCode = string.Empty;
+			
+			await webView21.EnsureCoreWebView2Async();
+
+			var timestamp = DateTime.UtcNow.Ticks;
+
+			async Task HighlightCode()
+			{
+				var snapTimestamp = timestamp = DateTime.UtcNow.Ticks; 
+				await Task.Delay(1000);
+
+					if (snapTimestamp != timestamp)
+					{
+						return;
+					}
+				
+				var code = string.Empty;
+
+				try
+				{
+					code = await GetEditorText() ?? string.Empty;
+
+					if (code == latestCode)
+					{
+						return;
+					}
+
+					latestCode = code;
+
+					try
+					{
+						code = CrmParser.HighlightCode(code);
+					}
+					catch (Exception e)
+					{
+						code = $"<div style=\"color: red;font-weight: bold;\">{e.Message}</div>";
+					}
+					finally
+					{
+						webView21.NavigateToString(code);
+					}
+				}
+				catch (Exception e)
+				{
+					try
+					{
+						webView21.NavigateToString(e.Message);
+					}
+					catch
+					{
+						// ignored
+					}
+				}
+			}
+			
+			(editorControl as IContentChanged<EventHandler>)?
+				.RegisterContentChange(async (_, _) => await HighlightCode());
+			
+			(editorControl as IContentChanged<EventHandler<CoreWebView2WebMessageReceivedEventArgs>>)?
+				.RegisterContentChange(async (_, _) => await HighlightCode());
+			
 			await SetEditorText(currentControl == editorControl ? editorText : outputText, isOutput);
 		}
 
@@ -72,7 +142,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 				return currentControl == editorControl ? editorText : outputText;
 			}
 
-			return await ((control as IEditorAync)?.GetTextAsync()
+			return await ((control as IEditorAsync)?.GetTextAsync()
 				?? Task.FromResult(((control ?? editorControl) as IEditor)?.GetText()));
 		}
 

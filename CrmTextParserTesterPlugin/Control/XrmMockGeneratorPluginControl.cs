@@ -209,7 +209,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
             this.labelYagasoft});
 			this.toolBar.Location = new System.Drawing.Point(0, 0);
 			this.toolBar.Name = "toolBar";
-			this.toolBar.Size = new System.Drawing.Size(1000, 47);
+			this.toolBar.Size = new System.Drawing.Size(1000, 43);
 			this.toolBar.TabIndex = 0;
 			this.toolBar.Text = "toolBar";
 			// 
@@ -218,21 +218,21 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.buttonCloseTool.Image = ((System.Drawing.Image)(resources.GetObject("buttonCloseTool.Image")));
 			this.buttonCloseTool.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.buttonCloseTool.Name = "buttonCloseTool";
-			this.buttonCloseTool.Size = new System.Drawing.Size(122, 41);
+			this.buttonCloseTool.Size = new System.Drawing.Size(76, 40);
 			this.buttonCloseTool.Text = "Close";
 			this.buttonCloseTool.Click += new System.EventHandler(this.BtnCloseClick);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 47);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 43);
 			// 
 			// buttonTemplateEditor
 			// 
 			this.buttonTemplateEditor.Image = ((System.Drawing.Image)(resources.GetObject("buttonTemplateEditor.Image")));
 			this.buttonTemplateEditor.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.buttonTemplateEditor.Name = "buttonTemplateEditor";
-			this.buttonTemplateEditor.Size = new System.Drawing.Size(128, 41);
+			this.buttonTemplateEditor.Size = new System.Drawing.Size(78, 40);
 			this.buttonTemplateEditor.Text = "Editor";
 			this.buttonTemplateEditor.Visible = false;
 			this.buttonTemplateEditor.Click += new System.EventHandler(this.buttonTemplateEditor_Click);
@@ -242,7 +242,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.buttonDefaultT4.Image = ((System.Drawing.Image)(resources.GetObject("buttonDefaultT4.Image")));
 			this.buttonDefaultT4.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.buttonDefaultT4.Name = "buttonDefaultT4";
-			this.buttonDefaultT4.Size = new System.Drawing.Size(120, 41);
+			this.buttonDefaultT4.Size = new System.Drawing.Size(75, 40);
 			this.buttonDefaultT4.Text = "Reset";
 			this.buttonDefaultT4.Click += new System.EventHandler(this.buttonDefaultT4_Click);
 			// 
@@ -252,14 +252,14 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.buttonGenerate.Image = ((System.Drawing.Image)(resources.GetObject("buttonGenerate.Image")));
 			this.buttonGenerate.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.buttonGenerate.Name = "buttonGenerate";
-			this.buttonGenerate.Size = new System.Drawing.Size(119, 41);
+			this.buttonGenerate.Size = new System.Drawing.Size(75, 40);
 			this.buttonGenerate.Text = "Parse";
 			this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 47);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 43);
 			this.toolStripSeparator2.Visible = false;
 			// 
 			// buttonClearCache
@@ -267,7 +267,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.buttonClearCache.Image = ((System.Drawing.Image)(resources.GetObject("buttonClearCache.Image")));
 			this.buttonClearCache.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.buttonClearCache.Name = "buttonClearCache";
-			this.buttonClearCache.Size = new System.Drawing.Size(197, 41);
+			this.buttonClearCache.Size = new System.Drawing.Size(110, 40);
 			this.buttonClearCache.Text = "Clear Cache";
 			this.buttonClearCache.Visible = false;
 			this.buttonClearCache.Click += new System.EventHandler(this.buttonClearCache_Click);
@@ -275,7 +275,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 47);
+			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 43);
 			// 
 			// labelQuickGuide
 			// 
@@ -285,7 +285,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.labelQuickGuide.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.labelQuickGuide.LinkColor = System.Drawing.Color.DarkViolet;
 			this.labelQuickGuide.Name = "labelQuickGuide";
-			this.labelQuickGuide.Size = new System.Drawing.Size(173, 41);
+			this.labelQuickGuide.Size = new System.Drawing.Size(84, 40);
 			this.labelQuickGuide.Text = "Quick Guide";
 			this.labelQuickGuide.VisitedLinkColor = System.Drawing.Color.DarkBlue;
 			this.labelQuickGuide.Click += new System.EventHandler(this.labelQuickGuide_Click);
@@ -293,7 +293,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 47);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 43);
 			// 
 			// labelYagasoft
 			// 
@@ -303,7 +303,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.labelYagasoft.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
 			this.labelYagasoft.LinkColor = System.Drawing.Color.DarkViolet;
 			this.labelYagasoft.Name = "labelYagasoft";
-			this.labelYagasoft.Size = new System.Drawing.Size(195, 41);
+			this.labelYagasoft.Size = new System.Drawing.Size(95, 40);
 			this.labelYagasoft.Text = "Yagasoft.com";
 			this.labelYagasoft.VisitedLinkColor = System.Drawing.Color.DarkBlue;
 			this.labelYagasoft.Click += new System.EventHandler(this.labelYagasoft_Click);
@@ -367,12 +367,13 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.tableLayoutPanelMain.Controls.Add(this.panelHost, 0, 1);
 			this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanelTopBar, 0, 0);
 			this.tableLayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanelMain.Location = new System.Drawing.Point(0, 47);
+			this.tableLayoutPanelMain.Location = new System.Drawing.Point(0, 43);
 			this.tableLayoutPanelMain.Name = "tableLayoutPanelMain";
 			this.tableLayoutPanelMain.RowCount = 2;
 			this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
 			this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanelMain.Size = new System.Drawing.Size(1000, 394);
+			this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanelMain.Size = new System.Drawing.Size(1000, 398);
 			this.tableLayoutPanelMain.TabIndex = 0;
 			// 
 			// panelHost
@@ -380,7 +381,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.panelHost.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelHost.Location = new System.Drawing.Point(3, 40);
 			this.panelHost.Name = "panelHost";
-			this.panelHost.Size = new System.Drawing.Size(994, 351);
+			this.panelHost.Size = new System.Drawing.Size(994, 355);
 			this.panelHost.TabIndex = 0;
 			// 
 			// tableLayoutPanelTopBar
@@ -414,7 +415,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.labelRecordId.AutoSize = true;
 			this.labelRecordId.Location = new System.Drawing.Point(3, 5);
 			this.labelRecordId.Name = "labelRecordId";
-			this.labelRecordId.Size = new System.Drawing.Size(121, 29);
+			this.labelRecordId.Size = new System.Drawing.Size(56, 13);
 			this.labelRecordId.TabIndex = 1;
 			this.labelRecordId.Text = "Record ID";
 			// 
@@ -424,7 +425,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxRecordId.Location = new System.Drawing.Point(66, 2);
 			this.textBoxRecordId.Name = "textBoxRecordId";
-			this.textBoxRecordId.Size = new System.Drawing.Size(422, 35);
+			this.textBoxRecordId.Size = new System.Drawing.Size(422, 20);
 			this.textBoxRecordId.TabIndex = 2;
 			// 
 			// panelEntityName
@@ -443,7 +444,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxEntityName.Location = new System.Drawing.Point(73, 2);
 			this.textBoxEntityName.Name = "textBoxEntityName";
-			this.textBoxEntityName.Size = new System.Drawing.Size(415, 35);
+			this.textBoxEntityName.Size = new System.Drawing.Size(415, 20);
 			this.textBoxEntityName.TabIndex = 1;
 			// 
 			// labelEntityName
@@ -451,7 +452,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			this.labelEntityName.AutoSize = true;
 			this.labelEntityName.Location = new System.Drawing.Point(3, 5);
 			this.labelEntityName.Name = "labelEntityName";
-			this.labelEntityName.Size = new System.Drawing.Size(142, 29);
+			this.labelEntityName.Size = new System.Drawing.Size(64, 13);
 			this.labelEntityName.TabIndex = 0;
 			this.labelEntityName.Text = "Entity Name";
 			// 

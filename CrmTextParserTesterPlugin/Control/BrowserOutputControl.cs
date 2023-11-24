@@ -17,7 +17,7 @@ using Yagasoft.Libraries.Common;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
-	public partial class BrowserOutputControl : UserControl, IEditor, IEditorAync
+	public partial class BrowserOutputControl : UserControl, IEditor, IEditorAsync
 	{
 		private readonly TemplateEditor templateEditor;
 
@@ -48,6 +48,11 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 		{
 			await webView21.EnsureCoreWebView2Async();
 			webView21.NavigateToString(content ?? string.Empty);
+		}
+
+		public async Task RegisterContentChange(Delegate handler)
+		{
+			throw new NotImplementedException();
 		}
 
 		private async void button1_Click(object sender, EventArgs e)
