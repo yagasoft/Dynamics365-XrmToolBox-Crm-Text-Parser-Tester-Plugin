@@ -343,8 +343,8 @@
       <HintPath>..\packages\XrmToolBoxPackage.1.2022.10.58\lib\net462\XrmToolBox.PluginsStore.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Yagasoft.Libraries.Common, Version=5.3.2.0, Culture=neutral, PublicKeyToken=d99f90f6e31ed2df, processorArchitecture=MSIL">
-      <HintPath>..\packages\Yagasoft.Libraries.Common.5.3.2\lib\net462\Yagasoft.Libraries.Common.dll</HintPath>
+    <Reference Include="Yagasoft.Libraries.Common, Version=5.3.3.2, Culture=neutral, PublicKeyToken=d99f90f6e31ed2df, processorArchitecture=MSIL">
+      <HintPath>..\packages\Yagasoft.Libraries.Common.5.3.3\lib\net462\Yagasoft.Libraries.Common.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -458,13 +458,13 @@
 
 copy /Y "$(TargetPath)" "$(SolutionDir)lib\ILMerge\"
 copy /Y "$(TargetPath)" "$(TargetDir)merge\"
-copy /Y "$(SolutionDir)packages\Yagasoft.Libraries.Common.5.3.2\lib\net462" "$(SolutionDir)lib\ILMerge\"
-copy /Y "$(SolutionDir)packages\Yagasoft.Libraries.Common.5.3.2\lib\net462" "$(TargetDir)merge\"
+copy /Y "$(SolutionDir)packages\Yagasoft.Libraries.Common.5.3.3\lib\net462" "$(SolutionDir)lib\ILMerge\"
+copy /Y "$(SolutionDir)packages\Yagasoft.Libraries.Common.5.3.3\lib\net462" "$(TargetDir)merge\"
 
 IF NOT EXIST "$(SolutionDir)XrmToolBox\Plugins" mkdir "$(SolutionDir)XrmToolBox\Plugins"
 
 IF "$(ConfigurationName)" == "Debug" (
-  copy /Y "$(SolutionDir)packages\Yagasoft.Libraries.Common.5.3.2\lib\net462"  "$(SolutionDir)XrmToolBox\Plugins\"
+  copy /Y "$(SolutionDir)packages\Yagasoft.Libraries.Common.5.3.3\lib\net462"  "$(SolutionDir)XrmToolBox\Plugins\"
 )
 
 IF "$(ConfigurationName)" == "Release" (

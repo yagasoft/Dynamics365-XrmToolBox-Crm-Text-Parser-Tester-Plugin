@@ -19,179 +19,224 @@ using EventHandler = System.EventHandler;
 
 namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
-	public partial class TemplateEditor : UserControl
-	{
-		private readonly WorkerHelper workerHelper;
+    public partial class TemplateEditor : UserControl
+    {
+        private readonly WorkerHelper workerHelper;
 
-		private bool isOutputShown;
+        private bool isOutputShown;
 
-		private UserControl currentControl;
-		private UserControl browserEditorControl;
-		private UserControl textEditorControl;
-		private UserControl editorControl;
-		private UserControl browserOutputControl;
-		private UserControl textOutputControl;
-		private UserControl outputControl;
+        private UserControl currentControl;
+        private UserControl browserEditorControl;
+        private UserControl textEditorControl;
+        private UserControl editorControl;
+        private UserControl browserOutputControl;
+        private UserControl textOutputControl;
+        private UserControl outputControl;
 
-		private string editorText;
-		private string outputText;
+        private string editorText;
+        private string outputText;
 
-		public TemplateEditor(WorkerHelper workerHelper)
-		{
-			this.workerHelper = workerHelper;
-			InitializeComponent();
-		}
+        public TemplateEditor(WorkerHelper workerHelper)
+        {
+            this.workerHelper = workerHelper;
+            InitializeComponent();
+        }
 
-		private async void TemplateEditor_Load(object sender, EventArgs e)
-		{
-			await ShowEditor();
-		}
+        private async void TemplateEditor_Load(object sender, EventArgs e)
+        {
+            await ShowEditor();
+        }
 
-		public async Task ShowEditor(bool isOutput = false)
-		{
-			isOutputShown = isOutput;
+        public async Task ShowEditor(bool isOutput = false)
+        {
+            isOutputShown = isOutput;
 
-			editorText = currentControl == editorControl ? await GetEditorText(currentControl) : editorText;
-			outputText = currentControl == outputControl ? await GetEditorText(currentControl) : outputText;
+            editorText = currentControl == editorControl ? await GetEditorText(currentControl) : editorText;
+            outputText = currentControl == outputControl ? await GetEditorText(currentControl) : outputText;
 
-			editorControl = checkBoxHtmlEditor.Checked
-				? browserEditorControl ??= new BrowserEditorControl()
-				: textEditorControl ??= new EditorControl();
+            editorControl = checkBoxHtmlEditor.Checked
+                ? browserEditorControl ??= new BrowserEditorControl()
+                : textEditorControl ??= new EditorControl();
 
-			outputControl = checkBoxHtmlOutput.Checked
-				? browserOutputControl ??= new BrowserOutputControl(this)
-				: textOutputControl ??= new OutputControl(this);
+            outputControl = checkBoxHtmlOutput.Checked
+                ? browserOutputControl ??= new BrowserOutputControl(this)
+                : textOutputControl ??= new OutputControl(this);
 
-			currentControl = isOutput ? outputControl : editorControl;
+            currentControl = isOutput ? outputControl : editorControl;
 
-			panelCodeEditor.Controls.Clear();
-			panelCodeEditor.Controls.Add(currentControl);
+            panelCodeEditor.Controls.Clear();
+            panelCodeEditor.Controls.Add(currentControl);
 
-			currentControl.Dock = DockStyle.Fill;
+            currentControl.Dock = DockStyle.Fill;
 
-			var latestCode = string.Empty;
-			
-			await webView21.EnsureCoreWebView2Async();
+            var latestCode = string.Empty;
+            
+            await webView21.EnsureCoreWebView2Async();
 
-			var timestamp = DateTime.UtcNow.Ticks;
+            var timestamp = DateTime.UtcNow.Ticks;
 
-			async Task HighlightCode()
-			{
-				var snapTimestamp = timestamp = DateTime.UtcNow.Ticks; 
-				await Task.Delay(1000);
+            async Task HighlightCode()
+            {
+                var snapTimestamp = timestamp = DateTime.UtcNow.Ticks; 
+                await Task.Delay(1000);
 
-					if (snapTimestamp != timestamp)
-					{
-						return;
-					}
-				
-				var code = string.Empty;
+                    if (snapTimestamp != timestamp)
+                    {
+                        return;
+                    }
+                
+                var code = string.Empty;
 
-				try
-				{
-					code = await GetEditorText() ?? string.Empty;
+                try
+                {
+                    code = await GetEditorText() ?? string.Empty;
 
-					if (code == latestCode)
-					{
-						return;
-					}
+                    if (code == latestCode)
+                    {
+                        return;
+                    }
 
-					latestCode = code;
+                    latestCode = code;
 
-					try
-					{
-						code = CrmParser.HighlightCode(code);
-					}
-					catch (Exception e)
-					{
-						code = $"<div style=\"color: red;font-weight: bold;\">{e.Message}</div>";
-					}
-					finally
-					{
-						webView21.NavigateToString(code);
-					}
-				}
-				catch (Exception e)
-				{
-					try
-					{
-						webView21.NavigateToString(e.Message);
-					}
-					catch
-					{
-						// ignored
-					}
-				}
-			}
-			
-			(editorControl as IContentChanged<EventHandler>)?
-				.RegisterContentChange(async (_, _) => await HighlightCode());
-			
-			(editorControl as IContentChanged<EventHandler<CoreWebView2WebMessageReceivedEventArgs>>)?
-				.RegisterContentChange(async (_, _) => await HighlightCode());
-			
-			await SetEditorText(currentControl == editorControl ? editorText : outputText, isOutput);
-		}
+                    try
+                    {
+                        code = await Task.FromResult(CrmParser.HighlightCode(code).Replace("```ELEMENT~~~", "div"));
+                    }
+                    catch (Exception e)
+                    {
+                        code = $"<div style=\"color: red; font-weight: bold;\" class=\"code\">{e.Message}</div>";
+                    }
+                    finally
+                    {
+                        webView21.NavigateToString(
+                            @$"
+<html>
+<head>
+  <script src=""https://code.jquery.com/jquery-3.7.1.slim.min.js""></script>
+  <script>
+	function bindHover()
+	{{
+		$('.code')
+			.on( ""mouseenter"",
+				(e) => {{
+					e.stopPropagation();
+					$(e.target).addClass('code-hover')
+						.parents().removeClass('code-hover');
+				}})
+			.on( ""mouseleave"", 
+				(e) => {{
+					$(e.target).removeClass('code-hover');
 
-		public async Task<string> GetEditorText(UserControl control = null)
-		{
-			control ??= editorControl;
+					setTimeout(() =>
+					{{
+						$('.code:hover').trigger('mouseover');
+					}}, 100);
+				}})
+	}}
 
-			if (control != currentControl)
-			{
-				return currentControl == editorControl ? editorText : outputText;
-			}
+	$(() => bindHover());
+  </script>
+  <style>
+	.code {{
+		display:contents;
+		font-family: Consolas;
+	}}
 
-			return await ((control as IEditorAsync)?.GetTextAsync()
-				?? Task.FromResult(((control ?? editorControl) as IEditor)?.GetText()));
-		}
+	.code-hover {{
+		color: #FF00FF !important;
+		text-shadow: 1px 1px #EDEDED;
+		font-weight: bold !important;
+	}}
+  </style>
+</head>
+<body>
+  {code}
+</body>
+</html>
+");
+                    }
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        webView21.NavigateToString(e.Message);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+            }
+            
+            (editorControl as IContentChanged<EventHandler>)?
+                .RegisterContentChange(async (_, _) => await HighlightCode());
+            
+            (editorControl as IContentChanged<EventHandler<CoreWebView2WebMessageReceivedEventArgs>>)?
+                .RegisterContentChange(async (_, _) => await HighlightCode());
+            
+            await SetEditorText(currentControl == editorControl ? editorText : outputText, isOutput);
+        }
 
-		public async Task SetEditorText(string text, bool isOutput = false)
-		{
-			var control = (isOutput ? outputControl : editorControl) as IEditor;
+        public async Task<string> GetEditorText(UserControl control = null)
+        {
+            control ??= editorControl;
 
-			if (control == null)
-			{
-				return;
-			}
+            if (control != currentControl)
+            {
+                return currentControl == editorControl ? editorText : outputText;
+            }
 
-			await control.SetText(text);
-		}
+            return await ((control as IEditorAsync)?.GetTextAsync()
+                ?? Task.FromResult(((control ?? editorControl) as IEditor)?.GetText()));
+        }
 
-		private async void checkBoxHtmlEditor_CheckedChanged(object sender, EventArgs e)
-		{
-			if (!isOutputShown)
-			{
-				checkBoxHtmlEditor.Enabled = false;
+        public async Task SetEditorText(string text, bool isOutput = false)
+        {
+            var control = (isOutput ? outputControl : editorControl) as IEditor;
 
-				try
-				{
-					await ShowEditor();
-					await Task.Delay(300);
-				}
-				finally
-				{
-					checkBoxHtmlEditor.Enabled = true;
-				}
-			}
-		}
+            if (control == null)
+            {
+                return;
+            }
 
-		private async void checkBoxHtmlOutput_CheckedChanged(object sender, EventArgs e)
-		{
-			if (isOutputShown)
-			{
-				checkBoxHtmlOutput.Enabled = false;
+            await control.SetText(text);
+        }
 
-				try
-				{
-					await ShowEditor(true);
-					await Task.Delay(300);
-				}
-				finally
-				{
-					checkBoxHtmlOutput.Enabled = true;
-				}
-			}
-		}
-	}
+        private async void checkBoxHtmlEditor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!isOutputShown)
+            {
+                checkBoxHtmlEditor.Enabled = false;
+
+                try
+                {
+                    await ShowEditor();
+                    await Task.Delay(300);
+                }
+                finally
+                {
+                    checkBoxHtmlEditor.Enabled = true;
+                }
+            }
+        }
+
+        private async void checkBoxHtmlOutput_CheckedChanged(object sender, EventArgs e)
+        {
+            if (isOutputShown)
+            {
+                checkBoxHtmlOutput.Enabled = false;
+
+                try
+                {
+                    await ShowEditor(true);
+                    await Task.Delay(300);
+                }
+                finally
+                {
+                    checkBoxHtmlOutput.Enabled = true;
+                }
+            }
+        }
+    }
 }
