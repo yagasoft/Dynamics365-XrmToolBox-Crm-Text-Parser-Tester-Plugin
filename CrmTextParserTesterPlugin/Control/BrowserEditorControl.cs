@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces;
+using UserControl = System.Windows.Forms.UserControl;
 
 #endregion
 
@@ -80,7 +81,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
   <head>
     <meta charset='utf-8'>
     <title>CKEditor</title>
-    <script src='https://cdn.ckeditor.com/4.16.2/full-all/ckeditor.js'></script>
+    <script src='https://cdn.ckeditor.com/4.22.0/full/ckeditor.js'></script>
   </head>
   <body>
     <textarea name='editor1' id='editor1'>
@@ -110,6 +111,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
       var getEditorData = () => editor?.getData();
       var setEditorData = (data) => editor?.setData(data);
+      var insertEditorData = (text) => editor?.insertText(text);
 
       editor.on('change',
           function()
@@ -141,6 +143,11 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 							&& currentText.Contains("<body></body>"));
 			}
 			while (isRetry);
+		}
+		
+		public async Task InsertText(string text)
+		{
+			await webView21.CoreWebView2.ExecuteScriptAsync($"insertEditorData({ToLiteral(text)})");
 		}
 
 		public async Task RegisterContentChange(EventHandler<CoreWebView2WebMessageReceivedEventArgs> handler)

@@ -26,6 +26,12 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 			richTextBox1.Text = text.IsEmpty() ? "Start typing ..." : text;
 		}
 		
+		public void InsertText(string text)
+		{
+			richTextBox1.SelectionStart += richTextBox1.SelectionLength;
+			richTextBox1.SelectionLength = 0;
+			richTextBox1.SelectedText = text;
+		}
 		
 		public async Task RegisterContentChange(EventHandler handler)
 		{

@@ -1,8 +1,11 @@
 ﻿#region Imports
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +15,8 @@ using NuGet.Packaging.Signing;
 
 using Yagasoft.CrmTextParserTesterPlugin.Control.Interfaces;
 using Yagasoft.CrmTextParserTesterPlugin.Helpers;
+using Yagasoft.CrmTextParserTesterPlugin.Model;
+using Yagasoft.CrmTextParserTesterPlugin.Parsers;
 using Yagasoft.Libraries.Common;
 using EventHandler = System.EventHandler;
 
@@ -21,6 +26,8 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 {
     public partial class TemplateEditor : UserControl
     {
+        private readonly ToolParameters toolParameters;
+		
         private readonly WorkerHelper workerHelper;
 
         private bool isOutputShown;
@@ -36,14 +43,81 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
         private string editorText;
         private string outputText;
 
-        public TemplateEditor(WorkerHelper workerHelper)
+        public TemplateEditor(WorkerHelper workerHelper, ToolParameters toolParameters)
         {
             this.workerHelper = workerHelper;
-            InitializeComponent();
+	        this.toolParameters = toolParameters;
+	        InitializeComponent();
         }
 
         private async void TemplateEditor_Load(object sender, EventArgs e)
         {
+	        var labels = new List<System.Windows.Forms.Control>();
+			
+	        foreach (var category in Constants.Constructs)
+	        {
+		        labels
+						.Add(new Label
+							 {
+								 Text = category.Key,
+								 Font = new Font(DefaultFont, FontStyle.Bold | FontStyle.Underline),
+							AutoSize = true,
+							Padding = new Padding(0, 1, 1, 1)
+							 });
+
+		        foreach (var construct in category.Key.StartsWith("Operators")
+			        ? [..category.Value]
+							 : category.Value.OrderBy(c => c.Key).ToArray())
+		        {
+			        var label =
+				        new Label
+						{
+							Text = $"{construct.Key} \"{construct.Value}\"",
+							AutoSize = true,
+							Padding = new Padding(0, 1, 1, 1)
+						};
+					
+			        label.Click +=
+						async (_, _) =>
+										 {
+											 switch (currentControl)
+											 {
+												 case EditorControl control:
+													 control.InsertText(construct.Value);
+													 break;
+												 
+												 case BrowserEditorControl browserControl:
+													 await browserControl.InsertText(construct.Value);
+													 break;
+											 }
+										 };
+					
+			        labels.Add(label);
+					
+			        labels.Add(
+							new Label
+							{
+								BorderStyle = BorderStyle.Fixed3D,
+							Height = 2,
+							MaximumSize = new Size(20, 2),
+							Padding = new Padding(5, 1, 1, 1)
+							});
+		        }
+	        }
+
+			var flowLayoutPanel =
+				new FlowLayoutPanel
+				{
+					FlowDirection = FlowDirection.TopDown,
+					WrapContents = false,
+					AutoScroll = true,
+					AutoSize = true,
+					Dock = DockStyle.Fill
+				};
+
+	        flowLayoutPanel.Controls.AddRange([..labels]);
+			listBoxConstructs.Controls.Add(flowLayoutPanel);
+			
             await ShowEditor();
         }
 
@@ -100,7 +174,11 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 
                     try
                     {
-                        code = await Task.FromResult(CrmParser.HighlightCode(code).Replace("```ELEMENT~~~", "div"));
+	                    code = await Task.FromResult(
+		                    toolParameters.IsOldParser
+			                    ? CrmParserOld.HighlightCode(code).Replace("```ELEMENT~~~", "div")
+			                    : new CrmParser.Interpreter().Interpret(code)
+				                    .Print(expressionWrapper: @"<div class=""code ```type"">```exp</div>"));
                     }
                     catch (Exception e)
                     {
@@ -109,51 +187,108 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
                     finally
                     {
                         webView21.NavigateToString(
-                            @$"
+							toolParameters.IsOldParser
+							?
+$$"""
 <html>
 <head>
-  <script src=""https://code.jquery.com/jquery-3.7.1.slim.min.js""></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
   <script>
 	function bindHover()
-	{{
+	{
 		$('.code')
-			.on( ""mouseenter"",
-				(e) => {{
+			.on("mouseenter",
+				(e) => {
 					e.stopPropagation();
 					$(e.target).addClass('code-hover')
 						.parents().removeClass('code-hover');
-				}})
-			.on( ""mouseleave"", 
-				(e) => {{
+				})
+			.on("mouseleave", 
+				(e) => {
 					$(e.target).removeClass('code-hover');
 
 					setTimeout(() =>
-					{{
+					{
 						$('.code:hover').trigger('mouseover');
-					}}, 100);
-				}})
-	}}
+					}, 100);
+				})
+	}
 
 	$(() => bindHover());
   </script>
   <style>
-	.code {{
+	.code {
 		display:contents;
 		font-family: Consolas;
-	}}
+	}
 
-	.code-hover {{
+	.code-hover {
 		color: #FF00FF !important;
 		text-shadow: 1px 1px #EDEDED;
 		font-weight: bold !important;
-	}}
+	}
   </style>
 </head>
 <body>
-  {code}
+  {{code}}
 </body>
 </html>
-");
+"""
+								:
+$$"""
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+  <script>
+    function bindHover()
+    {
+      $('.code')
+        .on('mouseenter',
+          (e) => {
+            e.stopPropagation();
+            $(e.target).addClass('code-hover')
+              .parents().removeClass('code-hover');
+          })
+        .on('mouseleave', 
+          (e) => {
+            $(e.target).removeClass('code-hover');
+
+            setTimeout(() =>
+            {
+              $('.code:hover').trigger('mouseover');
+            }, 100);
+          })
+    }
+
+    $(() => bindHover());
+  </script>
+  <style>
+    .operator { color: #000000 }
+    .scope { color: #0055e8 }
+    .function { color: #a600ed }
+    .object { color: #6e3c00 }
+    .memory { color: #008f0c }
+    .text { color: #9c9c9c }
+    .literal { color: #d17a00 }
+    .other { color: #000000 }
+
+    .code {
+      display:contents;
+      font-family: Consolas;
+    }
+
+    .code-hover {
+      color: #FF00FF !important;
+      text-shadow: 2px 2px #EDEDED;
+      font-weight: bold !important;
+    }
+  </style>
+</head>
+<body>
+  {{code}}
+</body>
+</html>
+""");
                     }
                 }
                 catch (Exception e)
@@ -238,5 +373,10 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
                 }
             }
         }
-    }
+
+		private void checkBoxV5Parser_CheckedChanged(object sender, EventArgs e)
+		{
+			toolParameters.IsOldParser = checkBoxV5Parser.Enabled;
+		}
+	}
 }
