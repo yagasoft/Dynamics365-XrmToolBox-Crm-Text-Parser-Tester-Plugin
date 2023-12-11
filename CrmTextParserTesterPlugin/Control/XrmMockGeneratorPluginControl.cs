@@ -658,8 +658,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 															isRecordId ? new EntityReference(entityName, recordId) : null,
 															isRecordId ? Service : null,
 															Guid.NewGuid())
-													: new CrmParser.Interpreter()
-														.Interpret(template)
+													: CrmParser.Interpreter.Parse(template)
 														.Evaluate(isRecordId ? Service : null, isRecordId ? new Entity(entityName, recordId) : null);
 											}
 											catch (ThreadAbortException)

@@ -177,7 +177,7 @@ namespace Yagasoft.CrmTextParserTesterPlugin.Control
 	                    code = await Task.FromResult(
 		                    toolParameters.IsOldParser
 			                    ? CrmParserOld.HighlightCode(code).Replace("```ELEMENT~~~", "div")
-			                    : new CrmParser.Interpreter().Interpret(code)
+			                    : CrmParser.Interpreter.Parse(code)
 				                    .Print(expressionWrapper: @"<div class=""code ```type"">```exp</div>"));
                     }
                     catch (Exception e)
